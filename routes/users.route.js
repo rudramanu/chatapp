@@ -11,7 +11,7 @@ userRouter.post("/register", async (req, res) => {
   try {
     const user = await UserModel.findOne({ email });
     if (user) {
-      return res.send("Already registered with this email");
+      return res.send({ message: "Already registered with this email" });
     }
     bcrypt.hash(password, 5, async (err, encrypted_pass) => {
       if (err) {
@@ -23,11 +23,11 @@ userRouter.post("/register", async (req, res) => {
           password: encrypted_pass,
         });
         await user.save();
-        res.send("User Registered");
+        res.send({ message: "User Registered" });
       }
     });
   } catch (error) {
-    res.send("Error while registering");
+    res.send({ message: "Error while registering" });
   }
 });
 
@@ -42,7 +42,7 @@ userRouter.post("/login", async (req, res) => {
         const token = jwt.sign({ userID: user._id }, "coder");
         res.send({ message: "Logged in successfully", token });
       } else {
-        res.send("Wrong Credentials");
+        res.send({ message: "Wrong Credentials" });
       }
     });
   } catch (error) {
